@@ -1,6 +1,7 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './db/typeorm.config';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { TodoModule } from './todo/todo.module';
 
 @Module({
@@ -8,4 +9,9 @@ import { TodoModule } from './todo/todo.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  // 전역 미들웨어 적용
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
