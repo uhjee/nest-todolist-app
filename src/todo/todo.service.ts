@@ -1,51 +1,42 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import CreateTodoDto from './dto/create-todo.dto';
-import UpdateTodoDto from './dto/update-todo.dto';
+import { Injectable, Logger } from '@nestjs/common';
+import { CreateTodoDto } from './dto/create-todo.dto';
+import { UpdateTodoDto } from './dto/update-todo.dto';
 import { Todo } from '../lib/entity/domain/todo/todo.entity';
 import { TodoRepository } from './todo.repository';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class TodoService {
-  constructor(private todoRepository: TodoRepository) {}
+  private logger = new Logger('TodoService');
+
+  constructor(
+    private readonly todoRepository: TodoRepository,
+    private readonly usersService: UsersService,
+  ) {}
 
   createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
     return this.todoRepository.createTodo(createTodoDto);
   }
 
   async getAllTodos(): Promise<Todo[]> {
-    const todos = await this.todoRepository.find();
-    return todos;
+    return await this.todoRepository.getAllTodos();
   }
 
-  async getTodoById(id: number) {
-    const found = await this.todoRepository.findOneBy({
-      id,
-    });
+  async getTodosByUserId(userId: number): Promise<Todo[]> {
+    this.usersService.getUserById(userId);
 
-    if (!found) {
-      throw new NotFoundException(
-        `${id}의 ID를 가진 Todo 를 찾을 수 없습니다.`,
-      );
-    }
-    return found;
+    return await this.todoRepository.getTodosByUserId(userId);
   }
 
-  async updateTodo(id: number, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    const found = await this.todoRepository.findOneBy({ id });
-
-    const { status, content } = updateTodoDto;
-
-    if (status) {
-      found.status = status;
-    }
-    if (content) {
-      found.content = content;
-    }
-    await this.todoRepository.save(found);
-    return found;
+  async getTodoById(id: number): Promise<Todo> {
+    return await this.todoRepository.getTodoById(id);
   }
 
-  async delete(id: number): Promise<boolean> {
+  async updateTodo(id: number, updateTodoDto: UpdateTodoDto): Promise<void> {
+    await this.todoRepository.update({ id }, updateTodoDto);
+  }
+
+  async deleteTodoById(id: number): Promise<void> {
     return this.todoRepository.deleteTodoById(id);
   }
 }

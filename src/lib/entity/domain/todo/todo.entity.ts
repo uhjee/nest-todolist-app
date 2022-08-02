@@ -1,6 +1,7 @@
-import BaseTimeEntity from '@entity/domain/BaseTimeEntity';
+import { BaseTimeEntity } from '@entity/domain/BaseTimeEntity';
 import { TodoStatus } from '@entity/enum/TodoStatus';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from './user.entity';
 
 @Entity({
   name: 'todo',
@@ -19,4 +20,7 @@ export class Todo extends BaseTimeEntity {
 
   @Column()
   status: TodoStatus;
+
+  @ManyToOne((type) => User, (user) => user.todos, { eager: true })
+  user: User;
 }

@@ -4,7 +4,7 @@ import { TodoStatusValidationPipe } from '../pipes/todoStatusValidation.pipe';
 import { isNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export default class UpdateTodoDto {
+export class UpdateTodoDto {
   @ApiProperty({
     example: '내일은 두끼만 먹어야지',
     description: '할 일을 적어주세요.',

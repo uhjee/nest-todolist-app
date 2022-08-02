@@ -20,6 +20,8 @@
     "paths": {
       "@entity": ["src/lib/entity"],
       "@entity/*": ["src/lib/entity/*"],
+      "@common": ["src/lib/common"],
+      "@common/*": ["src/lib/common/*"],
       "@utils": ["src/util"],
       "@utils/*": ["src/util/*"]
     }
