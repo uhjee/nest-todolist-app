@@ -13,4 +13,5 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   // entities: ['src/lib/entity/domain/**/*.entity.{js,ts}'],
   entities: [__dirname + '/../lib/entity/domain/**/*.entity.{js,ts}'],
   synchronize: dbConfig.synchronize,
+  logging: true,
 };
