@@ -38,6 +38,8 @@
     "typeorm": "^0.3.7"
   },
   "devDependencies": {
+    "@concepta/typeorm-seeding": "^4.0.0-beta.0",
+    "@faker-js/faker": "^7.3.0",
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
