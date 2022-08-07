@@ -1,9 +1,9 @@
 import { CustomRepository } from 'src/db/typeorm-ex.decorator';
 import { TodoStatus } from 'src/lib/entity/enum/TodoStatus';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { Todo } from '@entity/domain/todo.entity';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { User } from '@entity/domain/user.entity';
 
 @CustomRepository(Todo)
@@ -13,7 +13,7 @@ export class TodoRepository extends Repository<Todo> {
       where: {
         deletedAt: null,
         user: {
-          deletedAt: null,
+          deletedAt: IsNull(),
         },
       },
     });
@@ -21,23 +21,22 @@ export class TodoRepository extends Repository<Todo> {
   }
 
   async getTodosByUserId(userId: number): Promise<Todo[]> {
-    const todos = await this.find({
+    return await this.find({
       where: {
-        deletedAt: null,
+        deletedAt: IsNull(),
         user: {
-          deletedAt: null,
+          deletedAt: IsNull(),
           id: userId,
         },
       },
     });
-    return todos;
   }
 
   async getTodoById(id: number): Promise<Todo> {
     const found = await this.findOne({
       where: {
         id,
-        deletedAt: null,
+        deletedAt: IsNull(),
       },
     });
     if (!found)
@@ -65,14 +64,14 @@ export class TodoRepository extends Repository<Todo> {
     return todo;
   }
 
-  async deleteTodoById(id: number) {
-    // const found = await this.findOneBy({ id, deletedAt: null });
-    // if (!found)
-    //   throw new NotFoundException(
-    //     `${id}의 ID를 가진 Todo 를 찾을 수 없습니다.`,
-    //   );
-    // found.deletedAt = LocalDateTime.now();
-    // await this.save(found);
-    await this.softDelete({ id });
+  async deleteTodoById(id: number, userId: number) {
+    const { affected } = await this.softDelete({
+      id,
+      deletedAt: IsNull(),
+      user: { id: userId },
+    });
+    console.log(affected);
+    if (!affected)
+      throw new NotFoundException(`${id}를 삭제하지 못하였습니다.`);
   }
 }

@@ -115,9 +115,12 @@ export class TodoController {
     required: true,
   })
   @Delete('/:id')
-  async deleteTodo(@Param('id') id: number): Promise<ResponseEntity<string>> {
+  async deleteTodo(
+    @Param('id') id: number,
+    @GetUser() user: User,
+  ): Promise<ResponseEntity<string>> {
     try {
-      await this.todoService.deleteTodoById(id);
+      await this.todoService.deleteTodoById(id, user);
       return ResponseEntity.OK();
     } catch (error) {
       this.logger.log(error.name, error.message);
