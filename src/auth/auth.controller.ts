@@ -6,6 +6,8 @@ import { SignUpUserDto } from './dto/sign-up.dto';
 import { ResponseEntity } from '@entity/common/res/response.entity';
 import { ResponseStatus } from '@entity/common/res/response.status.enum';
 import { SignInDto } from './dto/sign-in.dto';
+import { GetUser } from '../decorators/get-user.decorator';
+import { User } from '@entity/domain/user.entity';
 
 @Controller('api/auth')
 export class AuthController {
@@ -36,6 +38,7 @@ export class AuthController {
   @Post('/signin')
   async signIn(
     @Body(ValidationPipe) signInDto: SignInDto,
+    @GetUser() user: User,
   ): Promise<{ accessToken: string } | ResponseEntity<string>> {
     try {
       return await this.authService.signIn(signInDto);
