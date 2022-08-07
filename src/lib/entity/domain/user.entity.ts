@@ -1,10 +1,18 @@
 import { UserRole } from '@entity/enum/UserRole';
 import { BooleanTransformer } from 'src/lib/transformer/BooleanTransformer';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { BaseTimeEntity } from '../BaseTimeEntity';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
+import { BaseTimeEntity } from './BaseTimeEntity';
 import { Todo } from './todo.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
+@Unique(['email'])
 export class User extends BaseTimeEntity {
   @PrimaryGeneratedColumn()
   id: number;

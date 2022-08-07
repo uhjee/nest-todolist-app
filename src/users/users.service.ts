@@ -1,8 +1,9 @@
-import { User } from '@entity/domain/todo/user.entity';
+import { User } from '@entity/domain/user.entity';
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersRepository } from './users.repository';
+import { SignUpUserDto } from '../auth/dto/sign-up.dto';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -10,12 +11,12 @@ export class UsersService {
 
   constructor(private usersRepository: UsersRepository) {}
 
-  createUser(createUserDto: CreateUserDto): Promise<User> {
-    return this.usersRepository.createUser(createUserDto);
+  async getAllUsers(): Promise<GetUserDto[]> {
+    return await this.usersRepository.getAllUsers();
   }
 
-  async getAllUsers(): Promise<User[]> {
-    return await this.usersRepository.getAllUsers();
+  async createUser(signUpUserDto: SignUpUserDto): Promise<void> {
+    await this.usersRepository.createUser(signUpUserDto);
   }
 
   async getUserById(id: number): Promise<User> {
@@ -28,5 +29,9 @@ export class UsersService {
 
   async deleteUserById(id: number): Promise<void> {
     return this.usersRepository.deleteUserById(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User> {
+    return await this.usersRepository.getUserByEmail(email);
   }
 }

@@ -2,8 +2,9 @@ import { CustomRepository } from 'src/db/typeorm-ex.decorator';
 import { TodoStatus } from 'src/lib/entity/enum/TodoStatus';
 import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dto/create-todo.dto';
-import { Todo } from '../lib/entity/domain/todo/todo.entity';
+import { Todo } from '@entity/domain/todo.entity';
 import { NotFoundException } from '@nestjs/common';
+import { User } from '@entity/domain/user.entity';
 
 @CustomRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
@@ -47,11 +48,17 @@ export class TodoRepository extends Repository<Todo> {
     return found;
   }
 
-  async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
+  async createTodo(createTodoDto: CreateTodoDto, user: User): Promise<Todo> {
     const { content } = createTodoDto;
     const todo = this.create({
       content,
       status: TodoStatus.NOT_DONE,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+      },
     });
 
     await this.save(todo);

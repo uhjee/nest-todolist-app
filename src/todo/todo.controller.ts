@@ -8,16 +8,21 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { Todo } from '../lib/entity/domain/todo/todo.entity';
+import { Todo } from '@entity/domain/todo.entity';
 import { TodoService } from './todo.service';
 import { TodoStatusValidationPipe } from './pipes/todoStatusValidation.pipe';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ResponseEntity } from '@common/res/response.entity';
+import { ResponseEntity } from '@entity/common/res/response.entity';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '../decorators/get-user.decorator';
+import { User } from '@entity/domain/user.entity';
 
 @ApiTags('Todo')
+@UseGuards(AuthGuard())
 @Controller('api/todo')
 export class TodoController {
   private logger = new Logger('TodoController');
@@ -28,9 +33,10 @@ export class TodoController {
   @Post('')
   async createTodo(
     @Body() createTodoDto: CreateTodoDto,
+    @GetUser() user: User,
   ): Promise<ResponseEntity<Todo | string>> {
     try {
-      const todo = await this.todoService.createTodo(createTodoDto);
+      const todo = await this.todoService.createTodo(createTodoDto, user);
       return ResponseEntity.OK_WITH(todo);
     } catch (error) {
       this.logger.log(error.name, error.message);
@@ -39,12 +45,12 @@ export class TodoController {
   }
 
   @ApiOperation({ summary: 'UserId에 따른 Todo 조회하기' })
-  @Get(':userId/user')
+  @Get('/user')
   async getTodosByUserId(
-    @Param('userId', ParseIntPipe) userId: number,
+    @GetUser() user: User,
   ): Promise<ResponseEntity<Todo[] | string>> {
     try {
-      const todos = await this.todoService.getTodosByUserId(userId);
+      const todos = await this.todoService.getTodosByUserId(user.id);
       return ResponseEntity.OK_WITH(todos);
     } catch (error) {
       this.logger.log(error.name, error.message);

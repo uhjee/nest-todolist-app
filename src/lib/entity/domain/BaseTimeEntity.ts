@@ -13,21 +13,21 @@ export abstract class BaseTimeEntity extends BaseEntity {
     // transformer: new LocalDateTimeTransformer(),
     // nullable: true,
   })
-  createdAt: LocalDateTime;
+  createdAt: Date;
 
   @UpdateDateColumn({
     // name: 'updated_at',
     // type: 'timestamp',
     // transformer: new LocalDateTimeTransformer(),
   })
-  updatedAt: LocalDateTime;
+  updatedAt: Date;
 
   @DeleteDateColumn({
     // name: 'deleted_at',
     // type: 'timestamp',
     // transformer: new LocalDateTimeTransformer(),
   })
-  deletedAt: LocalDateTime;
+  deletedAt: Date;
 
   // @BeforeInsert()
   // protected beforeInsert() {

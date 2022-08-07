@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { ResponseStatus } from '@common/res/response.status.enum';
+import { ResponseStatus } from '@entity/common/res/response.status.enum';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseEntity<T> {

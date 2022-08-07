@@ -1,6 +1,6 @@
-import { ResponseEntity } from '@common/res/response.entity';
-import { ResponseStatus } from '@common/res/response.status.enum';
-import { User } from '@entity/domain/todo/user.entity';
+import { ResponseEntity } from '@entity/common/res/response.entity';
+import { ResponseStatus } from '@entity/common/res/response.status.enum';
+import { User } from '@entity/domain/user.entity';
 import {
   Body,
   Controller,
@@ -10,15 +10,16 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('User')
+@UseGuards(AuthGuard())
 @Controller('api/users')
 export class UsersController {
   private readonly logger = new Logger('UsersController');
@@ -46,24 +47,8 @@ export class UsersController {
   }
 
   @Get()
-  async getAllUsers(): Promise<ResponseEntity<User[]>> {
+  async getAllUsers(): Promise<ResponseEntity<GetUserDto[]>> {
     return ResponseEntity.OK_WITH(await this.usersService.getAllUsers());
-  }
-
-  @Post()
-  async createUser(
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<ResponseEntity<string>> {
-    try {
-      await this.usersService.createUser(createUserDto);
-      return ResponseEntity.OK();
-    } catch (error) {
-      this.logger.debug(error);
-      return ResponseEntity.ERROR_WITH(
-        error.message,
-        ResponseStatus.SERVER_ERROR,
-      );
-    }
   }
 
   @Patch('/:id')

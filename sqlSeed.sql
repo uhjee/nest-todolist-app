@@ -3,22 +3,28 @@
 
 INSERT INTO `todolist-app`.`user`
 (createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
-VALUES('2022-08-03 13:21:55.975', '2022-08-05 15:26:23.838', NULL, 1, '222@naver.com', 'admin', '1111', 'ADMIN', 0);
+VALUES('2022-08-07 06:37:19.509', '2022-08-07 06:37:19.509', NULL, 1, 'admin@gmail.com', 'admin', '$2a$10$D1x9Gj0tBBSD4j2eat9.xOEIURBuow59walu5fXckJiXibNRNLxuW', 'admin', 0);
 INSERT INTO `todolist-app`.`user`
 (createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
-VALUES('2022-08-03 13:23:18.050', '2022-08-05 15:26:23.848', NULL, 2, '123@naver.com', 'manager1', '1111', 'MANAGER', 0);
+VALUES('2022-08-07 06:37:34.803', '2022-08-07 06:37:34.803', NULL, 2, 'admin1@gmail.com', 'admin1', '$2a$10$YDd9A5B4L3RMxINxxlngwuEFSS5/nucqCuOLCeHV.9R2HcEi5tr1W', 'admin', 0);
 INSERT INTO `todolist-app`.`user`
 (createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
-VALUES('2022-08-03 13:23:20.303', '2022-08-05 15:26:23.850', NULL, 3, '1234@naver.com', 'manager2', '1111', 'MANAGER', 0);
+VALUES('2022-08-07 06:37:47.690', '2022-08-07 06:37:47.690', NULL, 3, 'manager@gmail.com', 'manager', '$2a$10$r48KRJ0knTl.EtbHAPhIsekoZxT.IIUX7MrqxQtzrWoejTpOe69R6', 'manager', 0);
 INSERT INTO `todolist-app`.`user`
 (createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
-VALUES('2022-08-03 13:23:22.346', '2022-08-05 15:26:23.851', NULL, 4, 'user1@naver.com', 'user1', '1111', 'USER', 0);
+VALUES('2022-08-07 06:37:58.868', '2022-08-07 06:37:58.868', NULL, 4, 'manager1@gmail.com', 'manager1', '$2a$10$rUZgS5NfoJUv5R27KPhK5ekc2pQ4Bf5cmtdSNPBh7slydDYbIm0rW', 'manager', 0);
 INSERT INTO `todolist-app`.`user`
 (createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
-VALUES('2022-08-04 15:09:51.587', '2022-08-05 15:26:23.853', NULL, 5, 'user2@naver.com', 'user2', '1111', 'USER', 0);
+VALUES('2022-08-07 06:38:06.249', '2022-08-07 06:38:06.249', NULL, 5, 'manager2@gmail.com', 'manager2', '$2a$10$FKnsNIq/CJrMUhKM4N0Fwu1GHdO/g5m8aViomngbseAW.Tt4l5tqW', 'manager', 0);
 INSERT INTO `todolist-app`.`user`
 (createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
-VALUES('2022-08-04 15:09:51.587', '2022-08-04 15:09:51.587', NULL, 6, 'user3@naver.com', 'user3', '1111', 'USER', 0);
+VALUES('2022-08-07 06:38:16.589', '2022-08-07 06:38:16.589', NULL, 6, 'user@gmail.com', 'user', '$2a$10$ns1uWnCdPoylfPoYC.rO8eHZB8wkTQNmBwy.0bmgSJl230w5pX/Ca', 'user', 0);
+INSERT INTO `todolist-app`.`user`
+(createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
+VALUES('2022-08-07 06:38:24.239', '2022-08-07 06:38:24.239', NULL, 7, 'user2@gmail.com', 'user2', '$2a$10$IrK0.owC/K2xltSYFjOgW.qy.BBKbwCIOZBvtXN8g//OK9TIJmUdm', 'user', 0);
+INSERT INTO `todolist-app`.`user`
+(createdAt, updatedAt, deletedAt, id, email, name, password, `role`, isBlackUser)
+VALUES('2022-08-07 06:38:31.253', '2022-08-07 06:38:31.253', NULL, 8, 'user3@gmail.com', 'user3', '$2a$10$1OBSZQ9Va3aeGgmfcGNm5Oyi1UvzwT6GcouVM.P/al4qEhEnLztwe', 'user', 0);
 
 -- `todolist-app`.`todo` insert
 

@@ -5,9 +5,10 @@ import { functionalLogger } from './middlewares/logger.funtional.middleware';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { TodoModule } from './todo/todo.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMConfig), TodoModule, UsersModule],
+  imports: [TypeOrmModule.forRoot(typeORMConfig), TodoModule, UsersModule, AuthModule],
   controllers: [],
   providers: [],
 })

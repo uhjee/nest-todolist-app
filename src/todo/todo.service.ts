@@ -1,9 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { UpdateTodoDto } from './dto/update-todo.dto';
-import { Todo } from '../lib/entity/domain/todo/todo.entity';
+import { Todo } from '@entity/domain/todo.entity';
 import { TodoRepository } from './todo.repository';
 import { UsersService } from 'src/users/users.service';
+import { User } from '@entity/domain/user.entity';
 
 @Injectable()
 export class TodoService {
@@ -14,8 +15,8 @@ export class TodoService {
     private readonly usersService: UsersService,
   ) {}
 
-  createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
-    return this.todoRepository.createTodo(createTodoDto);
+  createTodo(createTodoDto: CreateTodoDto, user: User): Promise<Todo> {
+    return this.todoRepository.createTodo(createTodoDto, user);
   }
 
   async getAllTodos(): Promise<Todo[]> {
@@ -23,7 +24,7 @@ export class TodoService {
   }
 
   async getTodosByUserId(userId: number): Promise<Todo[]> {
-    this.usersService.getUserById(userId);
+    await this.usersService.getUserById(userId);
 
     return await this.todoRepository.getTodosByUserId(userId);
   }

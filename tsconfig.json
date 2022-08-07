@@ -17,6 +17,7 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true, // import * as [] from '[]'
     "paths": {
       "@entity": ["src/lib/entity"],
       "@entity/*": ["src/lib/entity/*"],
