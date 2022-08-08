@@ -88,6 +88,7 @@ github에 0.3에 맞춰 개발 중이라고 하니 기다려봐야 할 듯
 - [x] ResponseEntity로 감싸기
 - [x] swagger? 문서화 도구 공부
 - [x] 로그인 기능 구현 - jwt
+- [x] Transaction 처리
 - [ ] validation 공통화 고민
 - [ ] 효율적인 project 구조 연습
 - [ ] user role에 따른 권한 기능 구현
@@ -99,3 +100,4 @@ github에 0.3에 맞춰 개발 중이라고 하니 기다려봐야 할 듯
 - [ ] FE에서 bearer token 다루는 법 공부
   - [ ] Refresh Token 적용
 - [ ] PK Entity column D/T bigint로 전환해야 하는지 고민
+

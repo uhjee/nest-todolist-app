@@ -36,7 +36,11 @@ export class TodoController {
     @GetUser() user: User,
   ): Promise<ResponseEntity<Todo | string>> {
     try {
-      const todo = await this.todoService.createTodo(createTodoDto, user);
+      // const todo = await this.todoService.createTodo(createTodoDto, user);
+      const todo = await this.todoService.createTodoWithQueryRunner(
+        createTodoDto,
+        user,
+      );
       return ResponseEntity.OK_WITH(todo);
     } catch (error) {
       this.logger.log(error.name, error.message);
