@@ -5,13 +5,14 @@ import {
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SignInDto } from 'src/auth/dto/sign-in.dto';
+import { SignInReqDto } from 'src/auth/dto/sign-in-req.dto';
 import { SignUpUserDto } from './dto/sign-up.dto';
 import { UsersService } from '../users/users.service';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { sign } from 'crypto';
 import { Response } from 'supertest';
+import { SignInResDto } from './dto/sign-in-res.dto';
 
 @Injectable()
 export class AuthService {
@@ -35,17 +36,18 @@ export class AuthService {
   /**
    * 로그인을 진행한다.
    *
-   * @param signInDto
+   * @param signInReqDto
    * @param res
    */
-  async signIn(signInDto: SignInDto): Promise<{ accessToken: string }> {
-    const { password, email } = signInDto;
+  async signIn(signInReqDto: SignInReqDto): Promise<SignInResDto> {
+    const { password, email } = signInReqDto;
 
     const found = await this.usersService.getUserByEmail(email);
 
     if (found && (await bcrypt.compare(password, found.password))) {
-      const accessToken = await this.jwtService.sign({ email });
-      return { accessToken };
+      const accessToken = this.jwtService.sign({ email });
+      delete found.password;
+      return { ...found, accessToken };
       throw new UnauthorizedException('login failed');
     }
   }

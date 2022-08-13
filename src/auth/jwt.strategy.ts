@@ -9,7 +9,6 @@ import { UsersRepository } from '../users/users.repository';
 import config from 'config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from '@entity/domain/user.entity';
-import { SignInDto } from './dto/sign-in.dto';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

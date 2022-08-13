@@ -5,9 +5,10 @@ import { UserRoleValidationPipe } from '../users/pipes/user-role-validation.pipe
 import { SignUpUserDto } from './dto/sign-up.dto';
 import { ResponseEntity } from '@entity/common/res/response.entity';
 import { ResponseStatus } from '@entity/common/res/response.status.enum';
-import { SignInDto } from './dto/sign-in.dto';
+import { SignInReqDto } from './dto/sign-in-req.dto';
 import { GetUser } from '../decorators/get-user.decorator';
 import { User } from '@entity/domain/user.entity';
+import { SignInResDto } from './dto/sign-in-res.dto';
 
 @Controller('api/auth')
 export class AuthController {
@@ -37,9 +38,9 @@ export class AuthController {
   @ApiOperation({ summary: '로그인을 한다.' })
   @Post('/signin')
   async signIn(
-    @Body(ValidationPipe) signInDto: SignInDto,
+    @Body(ValidationPipe) signInDto: SignInReqDto,
     @GetUser() user: User,
-  ): Promise<{ accessToken: string } | ResponseEntity<string>> {
+  ): Promise<SignInResDto | ResponseEntity<string>> {
     try {
       return await this.authService.signIn(signInDto);
     } catch (error) {
