@@ -10,8 +10,8 @@ export const dataSource = new DataSource({
   username: dbConfig.username,
   password: dbConfig.password,
   database: dbConfig.database,
-  // entities: ['src/lib/entity/domain/**/*.entity.{js,ts}'],
-  entities: [__dirname + '/../lib/entity/domain/**/*.entity.{js,ts}'],
+  // entity: ['src/common/entity/domain/**/*.entity.{js,ts}'],
+  entities: [__dirname + '/../common/entity/domain/**/*.entity.{js,ts}'],
   synchronize: dbConfig.synchronize,
   logging: true,
 });

@@ -2,27 +2,24 @@ import {
   forwardRef,
   Inject,
   Injectable,
-  Res,
   UnauthorizedException,
 } from '@nestjs/common';
-import { SignInReqDto } from 'src/auth/dto/sign-in-req.dto';
-import { SignUpUserDto } from './dto/sign-up.dto';
-import { UsersService } from '../users/users.service';
+import { SignInRequestDto } from 'src/auth/dto/sign-in.request.dto';
+import { UsersService } from '@users/application/users.service';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
-import { sign } from 'crypto';
-import { Response } from 'supertest';
-import { SignInResDto } from './dto/sign-in-res.dto';
+import { SignInResponseDto } from './dto/sign-in.response.dto';
+import { SignUpRequestDto } from './dto/sign-up.request.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UsersService)) // 순환 참조 문제 해결을 위해 forwardRef 사용
-    private usersService: UsersService,
-    private jwtService: JwtService,
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(signUpUserDto: SignUpUserDto): Promise<void> {
+  async signUp(signUpUserDto: SignUpRequestDto): Promise<void> {
     const { password } = signUpUserDto;
     // bcrypt 암호화 진행
     // 1. salt 생성
@@ -39,7 +36,7 @@ export class AuthService {
    * @param signInReqDto
    * @param res
    */
-  async signIn(signInReqDto: SignInReqDto): Promise<SignInResDto> {
+  async signIn(signInReqDto: SignInRequestDto): Promise<SignInResponseDto> {
     const { password, email } = signInReqDto;
 
     const found = await this.usersService.getUserByEmail(email);
@@ -48,7 +45,7 @@ export class AuthService {
       const accessToken = this.jwtService.sign({ email });
       delete found.password;
       return { ...found, accessToken };
-      throw new UnauthorizedException('login failed');
     }
+    throw new UnauthorizedException('login failed');
   }
 }

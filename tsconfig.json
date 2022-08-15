@@ -19,10 +19,12 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true, // import * as [] from '[]'
     "paths": {
-      "@entity": ["src/lib/entity"],
-      "@entity/*": ["src/lib/entity/*"],
-      "@common": ["src/lib/common"],
-      "@common/*": ["src/lib/common/*"],
+      "@common": ["src/common"],
+      "@common/*": ["src/common/*"],
+      "@users": ["src/users"],
+      "@users/*": ["src/users/*"],
+      "@todo": ["src/todo"],
+      "@todo/*": ["src/todo/*"],
       "@utils": ["src/util"],
       "@utils/*": ["src/util/*"]
     }

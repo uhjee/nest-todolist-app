@@ -3,9 +3,17 @@ import { AppModule } from './app.module';
 import config from 'config';
 import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // exception filter
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Interceptors
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   // Setting Swagger
   const swaggerConfig = new DocumentBuilder()
@@ -22,4 +30,5 @@ async function bootstrap() {
   await app.listen(serverConfig.port);
   Logger.log(`Application running on port ${serverConfig.port}`);
 }
+
 bootstrap();

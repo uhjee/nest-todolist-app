@@ -1,13 +1,11 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersRepository } from '../users/users.repository';
-import { UsersModule } from '../users/users.module';
-import { TypeOrmExModule } from '../db/typeorm-ex.module';
+import { UsersModule } from '@users/application/users.module';
 import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './jwt.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import config from 'config';
-import { JwtStrategy } from './jwt.strategy';
 
 const jwtConfig = config.get<JwtConfig>('jwt');
 
