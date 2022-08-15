@@ -41,7 +41,9 @@ export class AuthService {
 
     const found = await this.usersService.getUserByEmail(email);
 
+    // 비밀번호 검증
     if (found && (await bcrypt.compare(password, found.password))) {
+      // 토큰 발행
       const accessToken = this.jwtService.sign({ email });
       delete found.password;
       return { ...found, accessToken };

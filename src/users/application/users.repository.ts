@@ -3,6 +3,8 @@ import { IsNull, Repository } from 'typeorm';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { User } from './entity/user.entity';
 import { SignUpRequestDto } from '../../auth/dto/sign-up.request.dto';
+import { UpdateUserRequestDto } from '@users/web/request/update-user-request.dto';
+import { GetUserDto } from '@users/application/dto/get-user.dto';
 
 @CustomRepository(User)
 export class UsersRepository extends Repository<User> {
@@ -60,5 +62,19 @@ export class UsersRepository extends Repository<User> {
       );
 
     return found;
+  }
+
+  async updateUser(
+    id: number,
+    updateUserDto: UpdateUserRequestDto,
+  ): Promise<GetUserDto> {
+    const { affected } = await this.update({ id }, updateUserDto);
+
+    if (affected) {
+      const found = await this.getUserById(id);
+      delete found.password;
+      return found;
+    }
+    throw new NotFoundException(`${id}를 수정하지 못하였습니다.`);
   }
 }

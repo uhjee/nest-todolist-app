@@ -1,4 +1,3 @@
-import { UserRole } from '../enum/UserRole';
 import { OmitType } from '@nestjs/swagger';
 import { User } from '../entity/user.entity';
 

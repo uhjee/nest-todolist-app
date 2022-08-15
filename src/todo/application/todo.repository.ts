@@ -5,6 +5,7 @@ import { CreateTodoRequestDto } from '../web/request/create-todo.request.dto';
 import { Todo } from './entity/todo.entity';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { User } from '@users/application/entity/user.entity';
+import { UpdateTodoRequestDto } from '@todo/web/request/update-todo.request.dto';
 
 @CustomRepository(Todo)
 export class TodoRepository extends Repository<Todo> {
@@ -72,13 +73,23 @@ export class TodoRepository extends Repository<Todo> {
     return todo;
   }
 
+  async updateTodo(
+    id: number,
+    updateTodoDto: UpdateTodoRequestDto,
+  ): Promise<Todo> {
+    const { affected } = await this.update({ id }, updateTodoDto);
+    if (affected) {
+      return this.getTodoById(id);
+    }
+    throw new NotFoundException(`${id}를 수정하지 못하였습니다.`);
+  }
+
   async deleteTodoById(id: number, userId: number) {
     const { affected } = await this.softDelete({
       id,
       deletedAt: IsNull(),
       user: { id: userId },
     });
-    console.log(affected);
     if (!affected)
       throw new NotFoundException(`${id}를 삭제하지 못하였습니다.`);
   }

@@ -5,6 +5,7 @@ import { Logger } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { TransformResponseEntityInterceptor } from './interceptors/transform-response-entity.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
 
   // Interceptors
   app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalInterceptors(new TransformResponseEntityInterceptor());
 
   // Setting Swagger
   const swaggerConfig = new DocumentBuilder()

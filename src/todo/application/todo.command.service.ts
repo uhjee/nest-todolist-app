@@ -5,15 +5,17 @@ import { Todo } from './entity/todo.entity';
 import { TodoStatus } from './enum/TodoStatus';
 import { TodoRepository } from './todo.repository';
 import { DataSource } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 
 export interface ITodoCommandService {
   createTodo(createTodoDto: CreateTodoRequestDto, user: User): Promise<Todo>;
 
-  updateTodo(id: number, updateTodoDto: UpdateTodoRequestDto): Promise<void>;
+  updateTodo(id: number, updateTodoDto: UpdateTodoRequestDto): Promise<Todo>;
 
   deleteTodoById(id: number, user: User): Promise<void>;
 }
 
+@Injectable()
 export class TodoCommandService implements ITodoCommandService {
   constructor(
     private readonly todoRepository: TodoRepository,
@@ -47,7 +49,6 @@ export class TodoCommandService implements ITodoCommandService {
       await queryRunner.commitTransaction();
       return await queryRunner.manager.save(todo);
     } catch (e) {
-      console.log(e);
       await queryRunner.rollbackTransaction();
     } finally {
       await queryRunner.release();
@@ -57,8 +58,8 @@ export class TodoCommandService implements ITodoCommandService {
   async updateTodo(
     id: number,
     updateTodoDto: UpdateTodoRequestDto,
-  ): Promise<void> {
-    await this.todoRepository.update({ id }, updateTodoDto);
+  ): Promise<Todo> {
+    return this.todoRepository.updateTodo(id, updateTodoDto);
   }
 
   async deleteTodoById(id: number, user: User): Promise<void> {

@@ -10,13 +10,11 @@ import {
   Patch,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { GetUserDto } from '../application/dto/get-user.dto';
 import { UpdateUserRequestDto } from './request/update-user-request.dto';
 import { UsersService } from '../application/users.service';
 import { AuthGuard } from '@nestjs/passport';
-import { ResponseEntity } from '@common/entity/res/response.entity';
-import { ResponseStatus } from '@common/entity/res/response.status.enum';
 
 @ApiTags('User')
 @UseGuards(AuthGuard())
@@ -26,58 +24,35 @@ export class UsersController {
 
   constructor(private usersService: UsersService) {}
 
+  @ApiOperation({
+    summary: 'userId로 유저를 조회한다.',
+  })
+  @ApiParam({ name: 'id', description: 'User의 Id', required: true })
   @Get('/:id')
-  async getUser(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<ResponseEntity<User | string>> {
-    try {
-      const user = await this.usersService.getUserById(id);
-      return ResponseEntity.OK_WITH(user);
-    } catch (error) {
-      this.logger.debug(error);
-
-      return ResponseEntity.ERROR_WITH(
-        error.message,
-        ResponseStatus.SERVER_ERROR,
-      );
-    }
+  async getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return await this.usersService.getUserById(id);
   }
 
+  @ApiOperation({ summary: '모든 유저의 정보를 조회한다.' })
   @Get()
-  async getAllUsers(): Promise<ResponseEntity<GetUserDto[]>> {
-    return ResponseEntity.OK_WITH(await this.usersService.getAllUsers());
+  async getAllUsers(): Promise<GetUserDto[]> {
+    return await this.usersService.getAllUsers();
   }
 
+  @ApiOperation({ summary: '유저의 정보를 수정한다.' })
+  @ApiParam({ name: 'id', description: 'User의 Id', required: true })
   @Patch('/:id')
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserRequestDto: UpdateUserRequestDto,
-  ): Promise<ResponseEntity<string>> {
-    try {
-      await this.usersService.updateUser(id, updateUserRequestDto);
-      return ResponseEntity.OK();
-    } catch (error) {
-      this.logger.debug(error);
-      return ResponseEntity.ERROR_WITH(
-        error.message,
-        ResponseStatus.SERVER_ERROR,
-      );
-    }
+  ): Promise<GetUserDto> {
+    return await this.usersService.updateUser(id, updateUserRequestDto);
   }
 
+  @ApiOperation({ summary: 'user Id로 유저를 삭제한다.' })
+  @ApiParam({ name: 'id', description: 'User의 Id', required: true })
   @Delete('/:id')
-  async deleteUser(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<ResponseEntity<string>> {
-    try {
-      await this.usersService.deleteUserById(id);
-      return ResponseEntity.OK();
-    } catch (error) {
-      this.logger.debug(error);
-      return ResponseEntity.ERROR_WITH(
-        error.message,
-        ResponseStatus.SERVER_ERROR,
-      );
-    }
+  async deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return await this.usersService.deleteUserById(id);
   }
 }

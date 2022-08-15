@@ -114,8 +114,19 @@ users
 
 - users.service.ts에서는 위의 두 service의 구현체를 주입받아 사용
 
+---
 ## 📌 Interceptor 적용
 ### 1. Logging Time Interceptor 적용
+
+### 2. Transform Response Entity Interceptor 적용
+- controller에서 반환하는 데이터를 ResponseEntity로 wrapping 해주는 역할
+- controller의 반환값 존재 여부에 따라 분기 처리
+
+---
+## 📌Command 로직 반환값 정의
+1. create: 생성한 entity 반환
+2. update: 생성한 entity 반환
+3. delete: 성공 여부 반환 -> response entity에 일임
 
 ## ⚠️ TODO
 

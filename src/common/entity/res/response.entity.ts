@@ -15,7 +15,7 @@ export class ResponseEntity<T> {
   }
 
   static OK(): ResponseEntity<string> {
-    return new ResponseEntity<string>(ResponseStatus.OK, '', '');
+    return new ResponseEntity(ResponseStatus.OK, '', '');
   }
 
   static OK_WITH<T>(data: T): ResponseEntity<T> {

@@ -40,8 +40,8 @@ export class UsersService implements UsersQueryService, UsersCommandService {
   async updateUser(
     id: number,
     updateUserRequestDto: UpdateUserRequestDto,
-  ): Promise<void> {
-    await this.usersCommandService.updateUser(id, updateUserRequestDto);
+  ): Promise<GetUserDto> {
+    return await this.usersCommandService.updateUser(id, updateUserRequestDto);
   }
 
   async deleteUserById(id: number): Promise<void> {

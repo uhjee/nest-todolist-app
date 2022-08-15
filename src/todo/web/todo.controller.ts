@@ -9,7 +9,6 @@ import {
   Patch,
   Post,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { CreateTodoRequestDto } from './request/create-todo.request.dto';
 import { UpdateTodoRequestDto } from './request/update-todo.request.dto';
@@ -20,8 +19,6 @@ import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../../decorators/get-user.decorator';
 import { User } from '@users/application/entity/user.entity';
-import { ResponseEntity } from '@common/entity/res/response.entity';
-import { TransformResponseEntityInterceptor } from '../../interceptors/transform-response-entity.interceptor';
 
 @ApiTags('Todo')
 @UseGuards(AuthGuard())
@@ -32,7 +29,6 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @ApiOperation({ summary: 'Todo 생성하기' })
-  @UseInterceptors(new TransformResponseEntityInterceptor())
   @Post('')
   async createTodo(
     @Body() createTodoRequestDto: CreateTodoRequestDto,
@@ -42,7 +38,6 @@ export class TodoController {
   }
 
   @ApiOperation({ summary: 'UserId에 따른 Todo 조회하기' })
-  @UseInterceptors(new TransformResponseEntityInterceptor())
   @Get('/user')
   async getTodosByUserId(@GetUser() user: User): Promise<Todo[]> {
     return await this.todoService.getTodosByUserId(user.id);
@@ -50,14 +45,8 @@ export class TodoController {
 
   @ApiOperation({ summary: '모든 Todo 조회하기' })
   @Get('')
-  async getAllTodos(): Promise<ResponseEntity<Todo[] | string>> {
-    try {
-      const todos = await this.todoService.getAllTodos();
-      return ResponseEntity.OK_WITH(todos);
-    } catch (error) {
-      this.logger.log(error.name, error.message);
-      return ResponseEntity.ERROR_WITH(error.message);
-    }
+  async getAllTodos(): Promise<Todo[]> {
+    return await this.todoService.getAllTodos();
   }
 
   @ApiOperation({ summary: '하나의 Todo 조회하기' })
@@ -67,15 +56,8 @@ export class TodoController {
     required: true,
   })
   @Get('/:id')
-  async getTodoById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<ResponseEntity<Todo | string>> {
-    try {
-      const todo = await this.todoService.getTodoByTodoId(id);
-      return ResponseEntity.OK_WITH(todo);
-    } catch (error) {
-      return ResponseEntity.ERROR_WITH(error.message);
-    }
+  async getTodoById(@Param('id', ParseIntPipe) id: number): Promise<Todo> {
+    return await this.todoService.getTodoByTodoId(id);
   }
 
   @ApiOperation({ summary: 'Todo 수정하기' })
@@ -88,33 +70,21 @@ export class TodoController {
   async updateTodo(
     @Param('id', ParseIntPipe) id: number,
     @Body(new TodoStatusValidationPipe()) updateTodoDto: UpdateTodoRequestDto,
-  ): Promise<ResponseEntity<void | string>> {
-    try {
-      await this.todoService.updateTodo(id, updateTodoDto);
-      return ResponseEntity.OK();
-    } catch (error) {
-      this.logger.log(error.name, error.message);
-      return ResponseEntity.ERROR_WITH(error.message);
-    }
+  ): Promise<Todo> {
+    return await this.todoService.updateTodo(id, updateTodoDto);
   }
 
   @ApiOperation({ summary: 'Todo 삭제하기' })
   @ApiParam({
     name: 'id',
-    description: 'todo id',
+    description: 'todo의 id',
     required: true,
   })
   @Delete('/:id')
   async deleteTodo(
     @Param('id') id: number,
     @GetUser() user: User,
-  ): Promise<ResponseEntity<string>> {
-    try {
-      await this.todoService.deleteTodoById(id, user);
-      return ResponseEntity.OK();
-    } catch (error) {
-      this.logger.log(error.name, error.message);
-      return ResponseEntity.ERROR_WITH(error.message);
-    }
+  ): Promise<void> {
+    return await this.todoService.deleteTodoById(id, user);
   }
 }

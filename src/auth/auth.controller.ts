@@ -5,8 +5,6 @@ import { UserRoleValidationPipe } from '@users/web/pipes/user-role-validation.pi
 import { SignInRequestDto } from './dto/sign-in.request.dto';
 import { GetUser } from '../decorators/get-user.decorator';
 import { SignInResponseDto } from './dto/sign-in.response.dto';
-import { ResponseEntity } from '@common/entity/res/response.entity';
-import { ResponseStatus } from '@common/entity/res/response.status.enum';
 import { User } from '@users/application/entity/user.entity';
 import { SignUpRequestDto } from './dto/sign-up.request.dto';
 
@@ -21,9 +19,8 @@ export class AuthController {
   async signUn(
     @Body(ValidationPipe, UserRoleValidationPipe)
     signUpRequestDto: SignUpRequestDto,
-  ): Promise<ResponseEntity<string>> {
-    await this.authService.signUp(signUpRequestDto);
-    return ResponseEntity.OK();
+  ): Promise<void> {
+    return await this.authService.signUp(signUpRequestDto);
   }
 
   @ApiOperation({ summary: '로그인을 한다.' })

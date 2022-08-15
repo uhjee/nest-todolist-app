@@ -18,8 +18,6 @@ import { DataSource } from 'typeorm';
   providers: [],
 })
 export class AppModule implements NestModule {
-  constructor(private dataSource: DataSource) {}
-
   // 전역 미들웨어 적용
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(functionalLogger).forRoutes('*');

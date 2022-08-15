@@ -28,7 +28,7 @@ export class TodoService implements ITodoCommandService, ITodoQueryService {
   async updateTodo(
     id: number,
     updateTodoRequestDto: UpdateTodoRequestDto,
-  ): Promise<void> {
+  ): Promise<Todo> {
     return await this.todoCommandService.updateTodo(id, updateTodoRequestDto);
   }
 
