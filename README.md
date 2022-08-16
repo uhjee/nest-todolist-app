@@ -128,6 +128,12 @@ users
 2. update: 생성한 entity 반환
 3. delete: 성공 여부 반환 -> response entity에 일임
 
+---
+## 📌 Project Path Alias for typescript, jest
+[참조_ALAIS in NEST](https://velog.io/@modolee/nestjs-path-alias-feat-typeorm-jest)
+- typescript: tsconfig.json 수정
+- jest: package.json 내 json 속성 수정
+
 ## ⚠️ TODO
 
 - [x] ResponseEntity로 감싸기

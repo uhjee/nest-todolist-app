@@ -1,9 +1,9 @@
 import { Todo } from './entity/todo.entity';
 import { Injectable } from '@nestjs/common';
 import { TodoRepository } from './todo.repository';
-import { UsersService } from '../../users/application/users.service';
+import { UsersService } from '@users/application/users.service';
 
-export interface ITodoQueryService {
+export interface TodoQueryService {
   getAllTodos(): Promise<Todo[]>;
 
   getTodosByUserId(userId: number): Promise<Todo[]>;
@@ -12,7 +12,7 @@ export interface ITodoQueryService {
 }
 
 @Injectable()
-export class TodoQueryService implements ITodoQueryService {
+export class TodoRDBQueryService implements TodoQueryService {
   constructor(
     private readonly todoRepository: TodoRepository,
     private readonly usersService: UsersService,

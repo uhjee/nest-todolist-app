@@ -1,20 +1,22 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { CreateTodoRequestDto } from '../web/request/create-todo.request.dto';
 import { UpdateTodoRequestDto } from '../web/request/update-todo.request.dto';
 import { Todo } from './entity/todo.entity';
 import { User } from '@users/application/entity/user.entity';
-import { ITodoQueryService, TodoQueryService } from './todo.query.service';
+import { TodoQueryService, TodoRDBQueryService } from './todo.query.service';
 import {
-  ITodoCommandService,
   TodoCommandService,
+  TodoRDBCommandService,
 } from './todo.command.service';
 
 @Injectable()
-export class TodoService implements ITodoCommandService, ITodoQueryService {
+export class TodoService implements TodoCommandService, TodoQueryService {
   private logger = new Logger('TodoService');
 
   constructor(
+    @Inject(TodoRDBQueryService)
     private readonly todoQueryService: TodoQueryService,
+    @Inject(TodoRDBCommandService)
     private readonly todoCommandService: TodoCommandService,
   ) {}
 
@@ -23,6 +25,12 @@ export class TodoService implements ITodoCommandService, ITodoQueryService {
     user: User,
   ): Promise<Todo> {
     return await this.todoCommandService.createTodo(createTodoRequestDto, user);
+  }
+
+  async createTodoWithoutLogin(
+    createTodoDto: CreateTodoRequestDto,
+  ): Promise<Todo> {
+    return await this.todoCommandService.createTodoWithoutLogin(createTodoDto);
   }
 
   async updateTodo(
@@ -46,5 +54,9 @@ export class TodoService implements ITodoCommandService, ITodoQueryService {
 
   async getTodoByTodoId(id: number): Promise<Todo> {
     return await this.todoQueryService.getTodoByTodoId(id);
+  }
+
+  async deleteTodoByIdWithoutLogin(id: number): Promise<void> {
+    return await this.todoCommandService.deleteTodoByIdWithoutLogin(id);
   }
 }

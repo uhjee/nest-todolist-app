@@ -7,7 +7,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private logger = new Logger('HttpExceptionFilter');
 
   catch(exception: any, host: ArgumentsHost): any {
-    this.logger.log('-> exception', exception);
+    this.logger.log('-> exception', exception.toString());
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();

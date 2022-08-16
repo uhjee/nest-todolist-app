@@ -1,22 +1,26 @@
 import { UpdateTodoRequestDto } from '../web/request/update-todo.request.dto';
-import { User } from '../../users/application/entity/user.entity';
+import { User } from '@users/application/entity/user.entity';
 import { CreateTodoRequestDto } from '../web/request/create-todo.request.dto';
 import { Todo } from './entity/todo.entity';
 import { TodoStatus } from './enum/TodoStatus';
 import { TodoRepository } from './todo.repository';
-import { DataSource } from 'typeorm';
-import { Injectable } from '@nestjs/common';
+import { DataSource, IsNull } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
-export interface ITodoCommandService {
+export interface TodoCommandService {
   createTodo(createTodoDto: CreateTodoRequestDto, user: User): Promise<Todo>;
+
+  createTodoWithoutLogin(createTodoDto: CreateTodoRequestDto): Promise<Todo>;
 
   updateTodo(id: number, updateTodoDto: UpdateTodoRequestDto): Promise<Todo>;
 
   deleteTodoById(id: number, user: User): Promise<void>;
+
+  deleteTodoByIdWithoutLogin(id: number): Promise<void>;
 }
 
 @Injectable()
-export class TodoCommandService implements ITodoCommandService {
+export class TodoRDBCommandService implements TodoCommandService {
   constructor(
     private readonly todoRepository: TodoRepository,
     private dataSource: DataSource,
@@ -55,6 +59,20 @@ export class TodoCommandService implements ITodoCommandService {
     }
   }
 
+  async createTodoWithoutLogin(
+    createTodoDto: CreateTodoRequestDto,
+  ): Promise<Todo> {
+    const { content } = createTodoDto;
+
+    return this.todoRepository.save({
+      content,
+      status: TodoStatus.NOT_DONE,
+      user: {
+        id: 1,
+      },
+    });
+  }
+
   async updateTodo(
     id: number,
     updateTodoDto: UpdateTodoRequestDto,
@@ -64,5 +82,14 @@ export class TodoCommandService implements ITodoCommandService {
 
   async deleteTodoById(id: number, user: User): Promise<void> {
     return this.todoRepository.deleteTodoById(id, user.id);
+  }
+
+  async deleteTodoByIdWithoutLogin(id: number) {
+    const { affected } = await this.todoRepository.softDelete({
+      id,
+      deletedAt: IsNull(),
+    });
+    if (!affected)
+      throw new NotFoundException(`${id}를 삭제하지 못하였습니다.`);
   }
 }

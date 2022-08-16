@@ -75,6 +75,10 @@
       "json",
       "ts"
     ],
+    "moduleNameMapper": {
+      "^@todo/(.*)$": "<rootDir>/todo/$1",
+      "^@users/(.*)$": "<rootDir>/users/$1"
+    },
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
