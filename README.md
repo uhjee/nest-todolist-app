@@ -134,32 +134,37 @@ users
 - [x] swagger? 문서화 도구 공부
 - [x] 로그인 기능 구현 - jwt
 - [x] Transaction 처리
-- [ ] validation 공통화 고민
-- [ ] 효율적인 project 구조 연습
-- [ ] user role에 따른 권한 기능 구현
-    - passport 사용하면 될 듯
-- [ ] 로그 저장 방법 고민
-- [ ] Date 날짜 type 다루는 방법 고민
-- [ ] deleteAt: soft delete 시 매번 조건절에 걸어야 하는지 확인
+- [X] deleteAt: soft delete 시 매번 조건절에 걸어야 하는지 확인
     - createQueryBuilder 로 조회 시, typeorm이 아래 조건 추가해줌
       ```sql
       `deletedAt` IS NULL
       ```
+- [ ] validation 공통화 고민
+    - Global pipe 적용 (class-validate)
+- [ ] 효율적인 project 구조 연습
+    - web, app 단위 분리
+    - service (CQRS) 적용
+        - Toto:: interface 호출하도록 수정해야 함
+- [ ] user role에 따른 권한 기능 구현
+    - passport 사용
+- [ ] 로그 저장 방법 고민
+    - file system
+- [ ] Date 날짜 type 다루는 방법 고민
+    - joda-js 형변환 시점 고민
 
 - [ ] todos-user 관계에서 user.password 가져오지 않는 방법
-    - AS-IS: `User` 객체에서 일일히 `password` property 삭제
-- [ ] todo.service > getTodosByUserId 반환할 때, user.password 담기지 않도록 처리
+  - AS-IS: `User` 객체에서 일일히 `password` property 삭제
+    - query는 직접 query 작성
+- [ ] 로그인 이슈
+    - [ ] FE에서 bearer token 다루는 법 공부
+    - [ ] todo.service > getTodosByUserId 반환할 때, user.password 담기지 않도록 처리
 - JWT (FE 공통)
-    - [ ] Refresh Token 적용
+  - [ ] Refresh Token 적용
 - [ ] PK Entity column D/T bigint로 전환해야 하는지 고민
+- [ ] TEST 코드 작성
 
 ------
 
-
-
------
-
------
 
 Logging
 
