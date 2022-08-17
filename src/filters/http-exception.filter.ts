@@ -7,7 +7,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
   private logger = new Logger('HttpExceptionFilter');
 
   catch(exception: any, host: ArgumentsHost): any {
-    this.logger.log('-> exception', exception.toString());
+    this.logger.log('-> exception', exception);
 
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -24,24 +24,27 @@ export class HttpExceptionFilter implements ExceptionFilter {
           ),
         );
     }
+    if (exception) {
+      const err = exception.getResponse() as
+        | { message: any; statusCode: number }
+        | { error: string; statusCode: 400; message: string[] }; //class-validator typing
+      let message = '';
+      if (err.message) {
+        message = exception.response?.message;
+      }
 
-    const err = exception.getResponse() as
-      | { message: any; statusCode: number }
-      | { error: string; statusCode: 400; message: string[] }; //class-validator typing
-    let message = '';
-    if (err.message) {
-      message = exception.response?.message;
+      // TODO: err 상태에 따라서 분기 처리 필요
+      let responseStatus = ResponseStatus.SERVER_ERROR;
+      if (exception.status?.toString()[0] === '4') {
+        responseStatus = ResponseStatus.BAD_PARAMETER;
+      }
+
+      const status = exception.getStatus();
+      return response
+        .status(status)
+        .json(ResponseEntity.ERROR_WITH(message, responseStatus));
     }
 
-    // TODO: err 상태에 따라서 분기 처리 필요
-    let responseStatus = ResponseStatus.SERVER_ERROR;
-    if (exception.status?.toString()[0] === '4') {
-      responseStatus = ResponseStatus.BAD_PARAMETER;
-    }
-
-    const status = exception.getStatus();
-    response
-      .status(status)
-      .json(ResponseEntity.ERROR_WITH(message, responseStatus));
+    return response;
   }
 }

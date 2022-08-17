@@ -25,6 +25,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../../decorators/get-user.decorator';
 import { User } from '@users/application/entity/user.entity';
+import { TodosGroupByStatusDto } from '@todo/application/dto/todos-group-by-status.dto';
 
 @ApiTags('Todo')
 // @UseGuards(AuthGuard())
@@ -47,6 +48,15 @@ export class TodoController {
   @Get('')
   async getAllTodos(): Promise<Todo[]> {
     return await this.todoService.getAllTodos();
+  }
+
+  @ApiOperation({ summary: '[TODO] 모든 Todo를 status로 그룹화해 반환한다.' })
+  @ApiOkResponse({
+    type: TodosGroupByStatusDto,
+  })
+  @Get('/status')
+  async getAllTodosGroupByStatus() {
+    return await this.todoService.getAllTodosGroupByStatus();
   }
 
   @ApiOperation({ summary: '하나의 Todo 조회하기' })

@@ -8,6 +8,7 @@ import {
   TodoCommandService,
   TodoRDBCommandService,
 } from './todo.command.service';
+import { TodosGroupByStatusDto } from '@todo/application/dto/todos-group-by-status.dto';
 
 @Injectable()
 export class TodoService implements TodoCommandService, TodoQueryService {
@@ -58,5 +59,9 @@ export class TodoService implements TodoCommandService, TodoQueryService {
 
   async deleteTodoByIdWithoutLogin(id: number): Promise<void> {
     return await this.todoCommandService.deleteTodoByIdWithoutLogin(id);
+  }
+
+  async getAllTodosGroupByStatus(): Promise<TodosGroupByStatusDto> {
+    return await this.todoQueryService.getAllTodosGroupByStatus();
   }
 }
