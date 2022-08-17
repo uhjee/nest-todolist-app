@@ -1,5 +1,12 @@
-import { Body, Controller, Logger, Post, ValidationPipe } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import {
+  Body,
+  Controller,
+  Logger,
+  Post,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
+import { AuthJwtService } from './jwt/auth-jwt.service';
 import { ApiOperation } from '@nestjs/swagger';
 import { UserRoleValidationPipe } from '@users/web/pipes/user-role-validation.pipe';
 import { SignInRequestDto } from './dto/sign-in.request.dto';
@@ -7,6 +14,8 @@ import { GetUser } from '../decorators/get-user.decorator';
 import { SignInResponseDto } from './dto/sign-in.response.dto';
 import { User } from '@users/application/entity/user.entity';
 import { SignUpRequestDto } from './dto/sign-up.request.dto';
+import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './local/local-auth.guard';
 
 @Controller('api/auth')
 export class AuthController {
@@ -23,12 +32,19 @@ export class AuthController {
     return await this.authService.signUp(signUpRequestDto);
   }
 
-  @ApiOperation({ summary: '로그인을 한다.' })
+  // // JWT login
+  // @ApiOperation({ summary: 'jwt 로그인을 한다.' })
+  // @Post('/signin')
+  // async signIn(
+  //   @Body(ValidationPipe) signInDto: SignInRequestDto,
+  //   @GetUser() user: User,
+  // ): Promise<SignInResponseDto> {
+  //   return await this.authService.signIn(signInDto);
+  // }
+
+  @UseGuards(LocalAuthGuard)
   @Post('/signin')
-  async signIn(
-    @Body(ValidationPipe) signInDto: SignInRequestDto,
-    @GetUser() user: User,
-  ): Promise<SignInResponseDto> {
-    return await this.authService.signIn(signInDto);
+  login(@GetUser() user: User) {
+    return user;
   }
 }

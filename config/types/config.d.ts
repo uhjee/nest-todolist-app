@@ -16,3 +16,7 @@ interface JwtConfig {
   secret: string;
   expiresIn: number;
 }
+
+interface CookieConfig {
+  secret: string;
+}
