@@ -120,7 +120,7 @@ export class TodoController {
   })
   @Delete('/:id')
   async deleteTodo(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @GetUser() user: User,
   ): Promise<void> {
     return await this.todoService.deleteTodoById(id, user);

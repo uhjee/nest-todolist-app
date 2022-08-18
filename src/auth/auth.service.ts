@@ -6,6 +6,9 @@ import { AuthJwtService } from './jwt/auth-jwt.service';
 import bcrypt from 'bcryptjs';
 import { UsersService } from '@users/application/users.service';
 import { AuthLocalService } from './local/auth-local.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '@users/application/entity/user.entity';
+import { Repository } from 'typeorm';
 
 export interface IAuthService {
   signIn(signInReqDto: SignInRequestDto): Promise<SignInResponseDto>;
@@ -14,10 +17,10 @@ export interface IAuthService {
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(AuthLocalService)
+    @Inject(AuthJwtService)
     private readonly authService: IAuthService,
-    @Inject(forwardRef(() => UsersService)) // 순환 참조 문제 해결을 위해 forwardRef 사용
-    private readonly usersService: UsersService,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async signUp(signUpUserDto: SignUpRequestDto): Promise<void> {
@@ -28,7 +31,7 @@ export class AuthService {
     // 2. salt + password Hash 처리
     signUpUserDto.password = await bcrypt.hash(password, salt);
 
-    await this.usersService.createUser(signUpUserDto);
+    await this.userRepository.save(signUpUserDto);
   }
 
   async signIn(signInReqDto: SignInRequestDto): Promise<SignInResponseDto> {

@@ -1,21 +1,18 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignInRequestDto } from 'src/auth/dto/sign-in.request.dto';
-import { UsersService } from '@users/application/users.service';
 import bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { SignInResponseDto } from '../dto/sign-in.response.dto';
 import { IAuthService } from '../auth.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '@users/application/entity/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthJwtService implements IAuthService {
   constructor(
-    @Inject(forwardRef(() => UsersService)) // 순환 참조 문제 해결을 위해 forwardRef 사용
-    private readonly usersService: UsersService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -28,7 +25,7 @@ export class AuthJwtService implements IAuthService {
   async signIn(signInReqDto: SignInRequestDto): Promise<SignInResponseDto> {
     const { password, email } = signInReqDto;
 
-    const found = await this.usersService.getUserByEmail(email);
+    const found = await this.userRepository.findOneBy({ email });
 
     // 비밀번호 검증
     if (found && (await bcrypt.compare(password, found.password))) {

@@ -9,12 +9,14 @@ import { UsersRepository } from '@users/application/users.repository';
 import config from 'config';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { User } from '@users/application/entity/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @Inject(forwardRef(() => UsersRepository))
-    private usersRepository: UsersRepository,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {
     // 상속 받은 PassportStrategy의 옵션 세팅 - 중요
     super({
@@ -25,11 +27,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(payload: User) {
     const { email } = payload;
-    const user: User = await this.usersRepository.getUserByEmail(email);
+    const found = await this.userRepository.findOneBy({ email });
 
-    if (!user) {
+    if (!found) {
       throw new UnauthorizedException('Invalid token');
     }
-    return user;
+    return found;
   }
 }

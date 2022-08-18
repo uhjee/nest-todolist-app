@@ -2,7 +2,12 @@ import { Todo } from './entity/todo.entity';
 import { Injectable } from '@nestjs/common';
 import { TodoRepository } from './todo.repository';
 import { UsersService } from '@users/application/users.service';
-import { TodosGroupByStatusDto } from '@todo/application/dto/todos-group-by-status.dto';
+import {
+  DoingTodo,
+  DoneTodo,
+  NotDoneTodo,
+  TodosGroupByStatusDto,
+} from '@todo/application/dto/todos-group-by-status.dto';
 import { DataSource } from 'typeorm';
 import { TodoStatus } from '@todo/application/enum/TodoStatus';
 
@@ -40,9 +45,9 @@ export class TodoRDBQueryService implements TodoQueryService {
   async getAllTodosGroupByStatus(): Promise<TodosGroupByStatusDto> {
     const todosGroupByStatusDto: TodosGroupByStatusDto =
       new TodosGroupByStatusDto();
-    const notDoneList: Todo[] = [];
-    const doingList: Todo[] = [];
-    const doneList: Todo[] = [];
+    const notDoneList: NotDoneTodo[] = [];
+    const doingList: DoingTodo[] = [];
+    const doneList: DoneTodo[] = [];
 
     const todos: Todo[] = await this.dataSource
       .getRepository(Todo)
@@ -61,16 +66,14 @@ export class TodoRDBQueryService implements TodoQueryService {
       .innerJoinAndSelect('todo.user', 'user')
       .getRawMany();
 
-    console.log(todos);
-
     if (todos.length > 0) {
       todos.forEach((t) => {
         if (t.status === TodoStatus.NOT_DONE) {
-          notDoneList.push(t);
+          notDoneList.push(t as NotDoneTodo);
         } else if (t.status === TodoStatus.DOING) {
-          doingList.push(t);
+          doingList.push(t as DoingTodo);
         } else if (t.status === TodoStatus.DONE) {
-          doneList.push(t);
+          doneList.push(t as DoneTodo);
         }
       });
     }

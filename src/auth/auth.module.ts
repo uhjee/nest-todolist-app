@@ -18,27 +18,28 @@ const jwtConfig = config.get<JwtConfig>('jwt');
 
 @Module({
   imports: [
-    // // JWT
-    // PassportModule.register({
-    //   defaultStrategy: 'jwt',
-    // }),
-    // JwtModule.register({
-    //   secret: process.env.JWT_SECRET || jwtConfig.secret, // jwt 생성 시 사용하는 secret 텍스트
-    //   signOptions: {
-    //     expiresIn: jwtConfig.expiresIn, // default: 30 minutes
-    //   },
-    // }),
+    // * JWT
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+    }),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || jwtConfig.secret, // jwt 생성 시 사용하는 secret 텍스트
+      signOptions: {
+        expiresIn: jwtConfig.expiresIn, // default: 30 minutes
+      },
+    }),
 
-    // Local
-    PassportModule.register({ defaultStrategy: 'local', session: true }),
-    TypeOrmModule.forFeature([User]),
+    // * Local
+    // PassportModule.register({ defaultStrategy: 'local', session: true }),
+    // TypeOrmModule.forFeature([User]),
     // TypeOrmExModule.forCustomRepository([UsersRepository]),
-    forwardRef(() => UsersModule),
+    // forwardRef(() => UsersModule),
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
-    // AuthJwtService,
+    AuthJwtService,
     JwtStrategy,
     AuthLocalService,
     LocalStrategy,

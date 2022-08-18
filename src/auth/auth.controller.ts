@@ -32,19 +32,19 @@ export class AuthController {
     return await this.authService.signUp(signUpRequestDto);
   }
 
-  // // JWT login
-  // @ApiOperation({ summary: 'jwt 로그인을 한다.' })
-  // @Post('/signin')
-  // async signIn(
-  //   @Body(ValidationPipe) signInDto: SignInRequestDto,
-  //   @GetUser() user: User,
-  // ): Promise<SignInResponseDto> {
-  //   return await this.authService.signIn(signInDto);
-  // }
-
-  @UseGuards(LocalAuthGuard)
+  // JWT login
+  @ApiOperation({ summary: 'jwt 로그인을 한다.' })
   @Post('/signin')
-  login(@GetUser() user: User) {
-    return user;
+  async signIn(
+    @Body(ValidationPipe) signInDto: SignInRequestDto,
+    @GetUser() user: User,
+  ): Promise<SignInResponseDto> {
+    return await this.authService.signIn(signInDto);
   }
+
+  // @UseGuards(LocalAuthGuard)
+  // @Post('/signin')
+  // login(@GetUser() user: User) {
+  //   return user;
+  // }
 }
