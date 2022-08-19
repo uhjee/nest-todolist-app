@@ -3,27 +3,40 @@ import { BooleanTransformer } from 'src/common/transformer/BooleanTransformer';
 import {
   Column,
   Entity,
+  Index,
+  JoinColumn,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
 import { BaseTimeEntity } from '@common/entity/base-time.entity';
 import { Todo } from '@todo/application/entity/todo.entity';
+import { TodoDetail } from '@todo/application/entity/todo-detail.entity';
+import { IsEmail, IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
+@Index('email', ['email'], { unique: true })
 @Entity()
-@Unique(['email'])
 export class User extends BaseTimeEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({
+    type: 'bigint',
+  })
   id: number;
 
-  @Column()
+  @IsEmail()
+  @ApiProperty({
+    example: 'aaa@gamil.com',
+    description: '사용자 이메일',
+  })
+  @Column('varchar', { unique: true, length: 30 })
   email: string;
 
   @Column()
   name: string;
 
-  @Column()
+  @IsString()
+  @Column('varchar', { length: 100, select: false })
   password: string;
 
   @Column()
@@ -38,4 +51,10 @@ export class User extends BaseTimeEntity {
 
   @OneToMany((type) => Todo, (todo) => todo.user)
   todos: Todo[];
+
+  @OneToOne((type) => TodoDetail, {
+    cascade: true,
+  })
+  @JoinColumn()
+  todoDetail: TodoDetail;
 }

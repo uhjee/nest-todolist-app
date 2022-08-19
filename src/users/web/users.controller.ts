@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { GetUserDto } from '../application/dto/get-user.dto';
+import { UserWithoutPasswordDto } from '../application/dto/user-without-password.dto';
 import { UpdateUserRequestDto } from './request/update-user-request.dto';
 import { UsersService } from '../application/users.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -35,7 +35,7 @@ export class UsersController {
 
   @ApiOperation({ summary: '모든 유저의 정보를 조회한다.' })
   @Get()
-  async getAllUsers(): Promise<GetUserDto[]> {
+  async getAllUsers(): Promise<UserWithoutPasswordDto[]> {
     return await this.usersService.getAllUsers();
   }
 
@@ -45,7 +45,7 @@ export class UsersController {
   async updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserRequestDto: UpdateUserRequestDto,
-  ): Promise<GetUserDto> {
+  ): Promise<UserWithoutPasswordDto> {
     return await this.usersService.updateUser(id, updateUserRequestDto);
   }
 

@@ -1,7 +1,14 @@
 import { TodoStatus } from '../enum/TodoStatus';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BaseTimeEntity } from '@common/entity/base-time.entity';
 import { User } from '@users/application/entity/user.entity';
+import { IsString } from 'class-validator';
 
 @Entity({
   name: 'todo',
@@ -18,9 +25,11 @@ export class Todo extends BaseTimeEntity {
   @Column('text')
   content: string;
 
-  @Column()
+  @IsString()
+  @Column('varchar', { length: 30 })
   status: TodoStatus;
 
   @ManyToOne((type) => User, (user) => user.todos, { eager: true })
+  @JoinColumn()
   user: User;
 }
