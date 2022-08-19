@@ -1,16 +1,13 @@
 import { forwardRef, Module } from '@nestjs/common';
-import { TypeOrmExModule } from 'src/db/typeorm-ex.module';
 import { UsersModule } from 'src/users/application/users.module';
-import { TodoRepository } from './todo.repository';
-import { TodoService } from './todo.service';
-import { TodoRDBQueryService } from './todo.query.service';
-import { TodoRDBCommandService } from '@todo/application/todo.command.service';
+import { TodoService } from './service/todo.service';
+import { TodoRDBQueryService } from './service/todo.query.service';
+import { TodoRDBCommandService } from '@todo/application/service/todo.command.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Todo } from '@todo/application/entity/todo.entity';
 
 @Module({
-  imports: [
-    TypeOrmExModule.forCustomRepository([TodoRepository]),
-    forwardRef(() => UsersModule),
-  ],
+  imports: [TypeOrmModule.forFeature([Todo]), forwardRef(() => UsersModule)],
   providers: [TodoService, TodoRDBQueryService, TodoRDBCommandService],
   controllers: [],
   exports: [TodoService],

@@ -8,7 +8,7 @@ import {
   UsersCommandService,
   UsersRDBCommandService,
 } from './users.command.service';
-import { GetUserDto } from './dto/get-user.dto';
+import { UserWithoutPasswordDto } from './dto/user-without-password.dto';
 import { SignUpRequestDto } from '../../auth/dto/sign-up.request.dto';
 
 export interface UserAuthQueryService {
@@ -25,7 +25,7 @@ export class UsersService implements UsersQueryService, UsersCommandService {
     private readonly usersCommandService: UsersCommandService,
   ) {}
 
-  async getAllUsers(): Promise<GetUserDto[]> {
+  async getAllUsers(): Promise<UserWithoutPasswordDto[]> {
     return this.usersQueryService.getAllUsers();
   }
 
@@ -40,7 +40,7 @@ export class UsersService implements UsersQueryService, UsersCommandService {
   async updateUser(
     id: number,
     updateUserRequestDto: UpdateUserRequestDto,
-  ): Promise<GetUserDto> {
+  ): Promise<UserWithoutPasswordDto> {
     return await this.usersCommandService.updateUser(id, updateUserRequestDto);
   }
 

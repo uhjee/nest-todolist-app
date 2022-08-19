@@ -1,11 +1,11 @@
-import { UpdateTodoRequestDto } from '../web/request/update-todo.request.dto';
+import { UpdateTodoRequestDto } from '../../web/request/update-todo.request.dto';
 import { User } from '@users/application/entity/user.entity';
-import { CreateTodoRequestDto } from '../web/request/create-todo.request.dto';
-import { Todo } from './entity/todo.entity';
-import { TodoStatus } from './enum/TodoStatus';
-import { TodoRepository } from './todo.repository';
-import { DataSource, IsNull } from 'typeorm';
+import { CreateTodoRequestDto } from '../../web/request/create-todo.request.dto';
+import { Todo } from '../entity/todo.entity';
+import { TodoStatus } from '../enum/TodoStatus';
+import { DataSource, IsNull, Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 export interface TodoCommandService {
   createTodo(createTodoDto: CreateTodoRequestDto, user: User): Promise<Todo>;
@@ -22,7 +22,8 @@ export interface TodoCommandService {
 @Injectable()
 export class TodoRDBCommandService implements TodoCommandService {
   constructor(
-    private readonly todoRepository: TodoRepository,
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
     private dataSource: DataSource,
   ) {}
 
@@ -77,11 +78,24 @@ export class TodoRDBCommandService implements TodoCommandService {
     id: number,
     updateTodoDto: UpdateTodoRequestDto,
   ): Promise<Todo> {
-    return this.todoRepository.updateTodo(id, updateTodoDto);
+    const { affected } = await this.todoRepository.update(
+      { id },
+      updateTodoDto,
+    );
+    if (affected) {
+      return this.todoRepository.findOne({ where: { id } });
+    }
+    throw new NotFoundException(`${id}를 수정하지 못하였습니다.`);
   }
 
   async deleteTodoById(id: number, user: User): Promise<void> {
-    return this.todoRepository.deleteTodoById(id, user.id);
+    const { affected } = await this.todoRepository.softDelete({
+      id,
+      deletedAt: IsNull(),
+      user: { id: user.id },
+    });
+    if (!affected)
+      throw new NotFoundException(`${id}를 삭제하지 못하였습니다.`);
   }
 
   async deleteTodoByIdWithoutLogin(id: number) {

@@ -1,7 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { CreateTodoRequestDto } from '../web/request/create-todo.request.dto';
-import { UpdateTodoRequestDto } from '../web/request/update-todo.request.dto';
-import { Todo } from './entity/todo.entity';
+import { CreateTodoRequestDto } from '../../web/request/create-todo.request.dto';
+import { UpdateTodoRequestDto } from '../../web/request/update-todo.request.dto';
+import { Todo } from '../entity/todo.entity';
 import { User } from '@users/application/entity/user.entity';
 import { TodoQueryService, TodoRDBQueryService } from './todo.query.service';
 import {
@@ -63,5 +63,9 @@ export class TodoService implements TodoCommandService, TodoQueryService {
 
   async getAllTodosGroupByStatus(): Promise<TodosGroupByStatusDto> {
     return await this.todoQueryService.getAllTodosGroupByStatus();
+  }
+
+  async getTodoWithDetailByTodoId(id: number): Promise<Todo[]> {
+    return await this.todoQueryService.getTodoWithDetailByTodoId(id);
   }
 }

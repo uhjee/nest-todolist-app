@@ -2,9 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import {
   TodoQueryService,
   TodoRDBQueryService,
-} from '@todo/application/todo.query.service';
-import { TypeOrmExModule } from '../../db/typeorm-ex.module';
-import { TodoRepository } from '@todo/application/todo.repository';
+} from '@todo/application/service/todo.query.service';
 import { forwardRef } from '@nestjs/common';
 import { UsersModule } from '@users/application/users.module';
 
@@ -13,10 +11,7 @@ describe('TodoQeuryService', () => {
 
   beforeEach(async () => {
     const moduleRef: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmExModule.forCustomRepository([TodoRepository]),
-        forwardRef(() => UsersModule),
-      ],
+      imports: [forwardRef(() => UsersModule)],
       providers: [TodoRDBQueryService],
     }).compile();
 

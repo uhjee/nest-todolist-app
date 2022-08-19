@@ -115,22 +115,30 @@ users
 - users.service.ts에서는 위의 두 service의 구현체를 주입받아 사용
 
 ---
+
 ## 📌 Interceptor 적용
+
 ### 1. Logging Time Interceptor 적용
 
 ### 2. Transform Response Entity Interceptor 적용
+
 - controller에서 반환하는 데이터를 ResponseEntity로 wrapping 해주는 역할
 - controller의 반환값 존재 여부에 따라 분기 처리
 
 ---
+
 ## 📌Command 로직 반환값 정의
+
 1. create: 생성한 entity 반환
 2. update: 생성한 entity 반환
 3. delete: 성공 여부 반환 -> response entity에 일임
 
 ---
+
 ## 📌 Project Path Alias for typescript, jest
+
 [참조_ALAIS in NEST](https://velog.io/@modolee/nestjs-path-alias-feat-typeorm-jest)
+
 - typescript: tsconfig.json 수정
 - jest: package.json 내 json 속성 수정
 
@@ -144,13 +152,21 @@ users
     - createQueryBuilder 로 조회 시, typeorm이 아래 조건 추가해줌
       ```sql
       `deletedAt` IS NULL
-      ```
-- [ ] validation 공통화 고민
+      ``
+- [X] Custom Repository 걷어내기 - 편한 Unit Test를 위해
+    - 같은 이유로 Service 레이어에서는 같은 Service 레이어 의존 지양
+- [X] validation 공통화 고민
     - Global pipe 적용 (class-validate)
-- [ ] 효율적인 project 구조 연습
+- [X] 효율적인 project 구조 연습
     - web, app 단위 분리
     - service (CQRS) 적용
-        - Toto:: interface 호출하도록 수정해야 함
+        - Toto:: interface 호출하도록 수정해야 함 ✅
+- [X] `todo.service` > `getTodosByUserId` 반환할 때, `user.password` 담기지 않도록 처리
+  - Entity에서 `@Column` 데코레이터 select 옵션으로 처리
+  - 반대로 실제 조회를 위해서는 queryBuilder로 select절 컬럼 명시해야 함
+- [X] PK Entity column D/T bigint로 전환해야 하는지 고민
+- bigint 적용 쉽게 되는듯
+- Dto에 `toJson()` 구현
 - [ ] user role에 따른 권한 기능 구현
     - passport 사용
 - [ ] 로그 저장 방법 고민
@@ -159,15 +175,15 @@ users
     - joda-js 형변환 시점 고민
 
 - [ ] todos-user 관계에서 user.password 가져오지 않는 방법
-  - AS-IS: `User` 객체에서 일일히 `password` property 삭제
-    - query는 직접 query 작성
+    - AS-IS: `User` 객체에서 일일히 `password` property 삭제
+        - query는 최대한 queryBuilder 사용하하자
 - [ ] 로그인 이슈
-    - [ ] FE에서 bearer token 다루는 법 공부
-    - [ ] todo.service > getTodosByUserId 반환할 때, user.password 담기지 않도록 처리
+    - [X] FE에서 bearer token 다루는 법 공부
+        - axios instance에 header 설정
 - JWT (FE 공통)
-  - [ ] Refresh Token 적용
-- [ ] PK Entity column D/T bigint로 전환해야 하는지 고민
-- [ ] TEST 코드 작성
+    - [ ] Refresh Token 적용
+
+- [ ] 🔥 TEST 코드 작성
 
 ------
 

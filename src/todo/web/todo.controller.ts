@@ -8,12 +8,11 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { CreateTodoRequestDto } from './request/create-todo.request.dto';
 import { UpdateTodoRequestDto } from './request/update-todo.request.dto';
 import { Todo } from '../application/entity/todo.entity';
-import { TodoService } from '../application/todo.service';
+import { TodoService } from '../application/service/todo.service';
 import { TodoStatusValidationPipe } from './pipes/todoStatusValidation.pipe';
 import {
   ApiBody,
@@ -22,13 +21,12 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../../decorators/get-user.decorator';
 import { User } from '@users/application/entity/user.entity';
 import { TodosGroupByStatusDto } from '@todo/application/dto/todos-group-by-status.dto';
 
 @ApiTags('Todo')
-// @UseGuards(AuthGuard())
+// @UseGuards(AuthGuard()) // jwt 가드
 @Controller('api/todo')
 export class TodoController {
   private logger = new Logger('TodoController');
@@ -36,9 +34,12 @@ export class TodoController {
   constructor(private todoService: TodoService) {}
 
   @ApiOperation({ summary: 'UserId에 따른 Todo 조회하기' })
-  @Get('/user')
-  async getTodosByUserId(@GetUser() user: User): Promise<Todo[]> {
-    return await this.todoService.getTodosByUserId(user.id);
+  @Get('/user/:userId')
+  async getTodosByUserId(
+    // @GetUser() user: User
+    @Param('userId', ParseIntPipe) userId: number, // param으로 처리 (추후 위 권한으로 처리)
+  ): Promise<Todo[]> {
+    return await this.todoService.getTodosByUserId(userId);
   }
 
   @ApiOperation({ summary: '[TODO] 모든 Todo 조회하기' })
@@ -135,5 +136,15 @@ export class TodoController {
   @Delete('/:id/without-login')
   async deleteTodoByIdWithoutLogin(@Param('id') id: number): Promise<void> {
     return await this.todoService.deleteTodoByIdWithoutLogin(id);
+  }
+
+  @ApiOperation({
+    summary: '[TODO] Todo 상세정보를 포함해 조회한다.',
+  })
+  @Get('/:id/detail')
+  async getTodoWithDetailByTodoId(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<Todo[]> {
+    return await this.todoService.getTodoWithDetailByTodoId(id);
   }
 }
