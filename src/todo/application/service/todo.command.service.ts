@@ -1,11 +1,11 @@
-import { UpdateTodoRequestDto } from '../../web/request/update-todo.request.dto';
+import { UpdateTodoRequestDto } from '../web/request/update-todo.request.dto';
 import { User } from '@users/application/entity/user.entity';
-import { CreateTodoRequestDto } from '../../web/request/create-todo.request.dto';
-import { Todo } from '../entity/todo.entity';
-import { TodoStatus } from '../enum/TodoStatus';
-import { DataSource, IsNull, Repository } from 'typeorm';
+import { CreateTodoRequestDto } from '../web/request/create-todo.request.dto';
+import { Todo } from './entity/todo.entity';
+import { TodoStatus } from './enum/TodoStatus';
+import { TodoRepository } from './todo.repository';
+import { DataSource, IsNull } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 
 export interface TodoCommandService {
   createTodo(createTodoDto: CreateTodoRequestDto, user: User): Promise<Todo>;
